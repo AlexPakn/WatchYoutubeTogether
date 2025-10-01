@@ -22,6 +22,30 @@ Follow these steps to set up and run the Watch Youtube Together project on a new
 - Create `appsettings.json` and create the database connection string to match your PostgreSQL setup.
 - Create the SMTP email settings with your own credentials to enable email sending.
 
+- This is how it should look like:
+```sh
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=port;Database=watch_youtube_together_db;Username=your_user;Password=your_password"
+  },
+
+  "Smtp": {
+    "Host": "smtp.gmail.com",
+    "Port": "587",
+    "Username": "your_email",
+    "Password": "your_email_app_password",
+    "From": "yuor_email"
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
 
 3. **Database Setup**
 
