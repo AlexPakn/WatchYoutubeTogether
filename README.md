@@ -70,13 +70,13 @@ dotnet ef database update
 
 - After running, API docs are available at: `http://localhost:5501/swagger` (or the port shown in your console).
 
-### "Watch Youtube Together" (`youtube_api_test.html`)
+### "Watch Youtube Together Frontend" (`Watch_together_frontend`)
 
-- The file `youtube_api_test.html` **must not be opened directly as a local file** (e.g., `file:///C:/.../...test.html`), as browser security restrictions will prevent it from working correctly.
+- The file `index.html` **must not be opened directly as a local file** (e.g., `file:///C:/.../...index.html`), as browser security restrictions will prevent it from working correctly.
 - **Recommended:** Use a local web server to serve the file. For example, with the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension in Visual Studio Code:
-1. Open the folder containing `youtube_api_test.html` in VS Code.
-2. In the bottom right press the button **"Go Live"**.
-3. The file will open in your browser at `http://localhost:PORT/...test.html`.
+1. Open the folder `Watch_together_frontend` in VS Code.
+2. Open index.html, then in the bottom right press the button **"Go Live"**.
+3. The file will open in your browser at `http://localhost:PORT/index.html`.
 
 - Alternatively, you can use any other static file server (e.g. `npx serve`, Python's `http.server`, etc.).
 
