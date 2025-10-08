@@ -8,7 +8,7 @@ public class User
 	public string Username { get; set; }
 	public string Email { get; set; }
 	public string PasswordHash { get; set; }
-	public string AvatarUrl { get; set; } = "default";
+	public string AvatarUrl { get; set; } = "default.png";
 	public int IsBanned { get; set; } = 0;
 	public ICollection<UserToken> Tokens { get; set; }
 }

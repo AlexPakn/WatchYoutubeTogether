@@ -65,6 +65,9 @@ public class AuthService
 			RefreshTokenExpiryTime = refreshTokenExpires
 		};
 
+		_db.UserTokens.RemoveRange(_db.UserTokens.Where(t => t.UserId == user.Id));
+		await _db.SaveChangesAsync();
+
 		_db.UserTokens.Add(token);
 		await _db.SaveChangesAsync();
 

@@ -1,8 +1,7 @@
 import { API_BASE } from "../api.js";
 
 export function renderRoom(container, roomCode) {
-  // full code from your renderRoom() function
-  // (copy it here unchanged)
+  
   container.innerHTML = `
         <h2>Комната: ${roomCode}</h2>
         <label>Пароль (если есть): <input type="text" id="roomPassword"></label>

@@ -47,3 +47,18 @@ button:hover { background: #0056b3; }
 .chat-message { margin: 5px 0; display: flex; align-items: center; }
 .chat-meta { color: #888; font-size: 0.9em; margin-right: 8px; }
 #status { margin: 10px 0; color: #0f0; }
+
+
+
+#authTabs { margin-bottom: 15px; }
+#authTabs button {
+  margin-right: 5px;
+  padding: 8px 14px;
+  background: #333;
+  color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#authTabs button.active { background: #007bff; }
+#authTabs button:hover { background: #0056b3; }
