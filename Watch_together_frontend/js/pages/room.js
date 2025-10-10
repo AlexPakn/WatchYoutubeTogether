@@ -22,18 +22,22 @@ export async function renderRoom(container, roomCode) {
       </div>
     </div>
 
+    <p id="roleStatus"></p>
 
     <label>YouTube URL: <input type="text" id="videoUrl" size="70"></label>
     <button id="setVideoBtn" disabled>Set Video</button>
 
-    <div id="player"></div>
-    <p id="roleStatus"></p>
+    <div id="videoContainer">
+      <div id="chat">
+        <div><strong>Chat:</strong></div>
+        <div id="chatMessages"></div>
+        <div id="chatInputContainer">
+          <input type="text" id="chatInput" placeholder="Type a message...">
+          <button id="sendChatBtn">Send</button>
+        </div>
+      </div>
 
-    <div id="chat">
-      <div><strong>Chat:</strong></div>
-      <div id="chatMessages"></div>
-      <input type="text" id="chatInput" placeholder="Type a message...">
-      <button id="sendChatBtn">Send</button>
+      <div id="player"></div>
     </div>
   `;
 
@@ -239,7 +243,7 @@ export async function renderRoom(container, roomCode) {
     if (player) player.cueVideoById(id);
     else {
       player = new YT.Player('player', {
-        height: '390', width: '720', videoId: id,
+        height: '580', width: '1080', videoId: id,
         events: { 'onStateChange': onPlayerStateChange }
       });
     }
