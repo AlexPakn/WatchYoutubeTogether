@@ -2,15 +2,15 @@ import { apiGet, API_BASE } from "../api.js";
 
 export async function renderProfile(container) {
   container.innerHTML = `
-    <h2>Профиль</h2>
-    <div id="profile">Загрузка...</div>
+    <h2>Profile</h2>
+    <div id="profile">Loading...</div>
   `;
 
   try {
     const data = await apiGet("/api/User/me", true);
     renderProfileForm(data);
   } catch {
-    container.innerHTML += "<p style='color:red'>Ошибка загрузки профиля</p>";
+    container.innerHTML += "<p style='color:red'>Error loading profile</p>";
   }
 
   function renderProfileForm(user) {
@@ -19,17 +19,17 @@ export async function renderProfile(container) {
       <form id="profileForm" enctype="multipart/form-data">
         <p><b>ID:</b> ${user.id}</p>
         <label>
-          Имя пользователя:
+          Username:
           <input type="text" id="username" value="${user.username || ""}" required>
         </label>
         <br>
-        <label>Аватар:</label><br>
+        <label>Avatar:</label><br>
         <img id="avatarPreview" src="${user.avatarUrl || ""}" width="100" style="border-radius:8px;margin-bottom:8px;"><br>
         <input type="file" id="avatarInput" accept="image/*"><br>
-        <button type="submit">Сохранить изменения</button>
+        <button type="submit">Save Changes</button>
       </form>
       <br>
-      <button id="logout">Выйти</button>
+      <button id="logout">Logout</button>
       <p id="profileStatus" style="margin-top:10px;color:#0f0;"></p>
     `;
 
@@ -55,7 +55,7 @@ export async function renderProfile(container) {
       const file = avatarInput.files[0];
 
       const token = localStorage.getItem("accessToken");
-      if (!token) return alert("Необходимо войти!");
+      if (!token) return alert("You need to sign in!");
 
       const formData = new FormData();
       formData.append("Username", username);
@@ -67,10 +67,10 @@ export async function renderProfile(container) {
           headers: { Authorization: token },
           body: formData,
         });
-        if (!res.ok) throw new Error("Ошибка обновления: " + res.status);
+        if (!res.ok) throw new Error("Update error: " + res.status);
         const data = await res.json();
         status.style.color = "#0f0";
-        status.textContent = data.message || "Данные обновлены!";
+        status.textContent = data.message || "Data updated!";
       } catch (err) {
         status.style.color = "red";
         status.textContent = err.message;

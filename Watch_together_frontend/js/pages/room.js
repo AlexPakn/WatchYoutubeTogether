@@ -2,23 +2,25 @@ import { API_BASE } from "../api.js";
 
 export async function renderRoom(container, roomCode) {
   container.innerHTML = `
-    <h2>Комната: ${roomCode}</h2>
-    <label>Пароль (если есть): <input type="text" id="roomPassword"></label>
-    <button id="connectBtn">Подключиться</button>
+    <h2>Room: ${roomCode}</h2>
+    <label>Password (if any): <input type="text" id="roomPassword"></label>
+    <button id="connectBtn">Connect</button>
+    <button id="leaveRoomBtn" style="display:none;">Leave Room</button>
+
     <div id="status"></div>
 
     <div id="hostControls" style="display:none;margin-top:15px;">
-      <h3>Управление комнатой (только хост)</h3>
+      <h3>Room Controls (host only)</h3>
       <div>
-        <label>Изменить пароль:
-          <input type="text" id="newPassword" placeholder="оставьте пустым для удаления">
+        <label>Change password:
+          <input type="text" id="newPassword" placeholder="leave empty to remove">
         </label>
-        <button id="setPasswordBtn">Применить</button>
+        <button id="setPasswordBtn">Apply</button>
       </div>
       <div style="margin-top:15px;">
-        <h4>Участники:</h4>
-        <button id="refreshUsersBtn">Обновить список</button>
-        <div id="userList">Загрузка...</div>
+        <h4>Participants:</h4>
+        <button id="refreshUsersBtn">Refresh List</button>
+        <div id="userList">Loading...</div>
       </div>
     </div>
 
@@ -95,7 +97,7 @@ export async function renderRoom(container, roomCode) {
   // === Connection ===
   async function connectToRoom() {
     const token = localStorage.getItem("accessToken");
-    if (!token) return alert("Авторизуйтесь!");
+    if (!token) return alert("Please sign in!");
     const password = document.getElementById("roomPassword").value.trim();
     setStatus("Connecting...", "#aaa");
 
@@ -130,7 +132,7 @@ export async function renderRoom(container, roomCode) {
           break;
 
         case "password_updated":
-          alert("Пароль успешно изменён!");
+          alert("Password successfully updated!");
           break;
 
         default:
@@ -150,12 +152,27 @@ export async function renderRoom(container, roomCode) {
     try {
       await connection.start();
       setStatus("Connected!", "#0f0");
+      document.getElementById("leaveRoomBtn").style.display = "inline";
       await connection.invoke("JoinRoom", roomCode, password);
       await connection.invoke("SendCommand", roomCode, "get_role", {});
       await connection.invoke("GetChatHistory", roomCode);
     } catch (err) {
       setStatus("Connection failed", "red");
       console.error(err);
+    }
+  }
+
+  
+  async function leaveRoom() {
+    if (!connection) return alert("You are not connected to a room.");
+    try {
+      await connection.invoke("LeaveRoom", roomCode);
+      await connection.stop();
+
+      location.hash = "/"; // optional: return to main screen
+    } catch (err) {
+      console.error("Error Exit:", err);
+      setStatus("Error leaving room", "red");
     }
   }
 
@@ -168,13 +185,13 @@ export async function renderRoom(container, roomCode) {
   // === User list (host only) ===
   async function loadUserList() {
     const listDiv = document.getElementById("userList");
-    listDiv.innerHTML = "Загрузка...";
+    listDiv.innerHTML = "Loading...";
     try {
       const res = await fetch(`${API_BASE}/api/WatchRoom/user-ids/${roomCode}`);
-      if (!res.ok) throw new Error("Ошибка запроса: " + res.status);
+      if (!res.ok) throw new Error("Error: " + res.status);
       const data = await res.json();
       if (!data.userIds || !data.userIds.length) {
-        listDiv.innerHTML = "<p>Нет пользователей.</p>";
+        listDiv.innerHTML = "<p>No users.</p>";
         return;
       }
 
@@ -198,8 +215,8 @@ export async function renderRoom(container, roomCode) {
             <span>${u.username || "User " + u.id}</span>
           </div>
           <div>
-            <button class="transferBtn" data-id="${u.id}">Передать хост</button>
-            <button class="kickBtn" data-id="${u.id}">Кик</button>
+            <button class="transferBtn" data-id="${u.id}">Give host</button>
+            <button class="kickBtn" data-id="${u.id}">Kick</button>
           </div>
         </div>
       `).join("");
@@ -217,7 +234,7 @@ export async function renderRoom(container, roomCode) {
       });
 
     } catch (err) {
-      listDiv.innerHTML = `<p style="color:red;">Ошибка загрузки пользователей: ${err.message}</p>`;
+      listDiv.innerHTML = `<p style="color:red;">ERROR loading users: ${err.message}</p>`;
     }
   }
 
@@ -276,4 +293,5 @@ export async function renderRoom(container, roomCode) {
     loadVideo(url);
     sendCommand("set_video", { url });
   };
+  document.getElementById("leaveRoomBtn").onclick = leaveRoom;
 }

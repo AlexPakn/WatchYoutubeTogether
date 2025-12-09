@@ -2,12 +2,12 @@ import { apiPost } from "../api.js";
 
 export function renderAuth(container) {
   container.innerHTML = `
-    <h2>Авторизация</h2>
+    <h2>Auth</h2>
 
     <div id="authTabs">
-      <button id="tabLogin" class="active">Войти</button>
-      <button id="tabSignup">Регистрация</button>
-      <button id="tabForgot">Забыли пароль?</button>
+      <button id="tabLogin" class="active">Login</button>
+      <button id="tabSignup">Sign Up</button>
+      <button id="tabForgot">Forgot Password?</button>
     </div>
 
     <div id="authContent"></div>
@@ -30,8 +30,8 @@ export function renderAuth(container) {
   const loginForm = `
     <form id="loginForm">
       <input id="loginEmail" type="email" placeholder="Email" required>
-      <input id="loginPassword" type="password" placeholder="Пароль" required>
-      <button type="submit">Войти</button>
+      <input id="loginPassword" type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
     </form>
   `;
 
@@ -39,9 +39,9 @@ export function renderAuth(container) {
   const signupForm = `
     <form id="signupForm">
       <input id="signupEmail" type="email" placeholder="Email" required>
-      <input id="signupUsername" type="text" placeholder="Имя пользователя" required>
-      <input id="signupPassword" type="password" placeholder="Пароль" required>
-      <button type="submit">Зарегистрироваться</button>
+      <input id="signupUsername" type="text" placeholder="Username" required>
+      <input id="signupPassword" type="password" placeholder="Password" required>
+      <button type="submit">Sign Up</button>
       <p id="signupStatus" style="color:#0f0;margin-top:5px;"></p>
     </form>
   `;
@@ -50,8 +50,8 @@ export function renderAuth(container) {
   const forgotForm = `
     <form id="forgotForm">
       <input id="forgotEmail" type="email" placeholder="Email" required>
-      <input id="forgotPassword" type="password" placeholder="Новый пароль" required>
-      <button type="submit">Сбросить пароль</button>
+      <input id="forgotPassword" type="password" placeholder="New Password" required>
+      <button type="submit">Reset Password</button>
       <p id="forgotStatus" style="color:#0f0;margin-top:5px;"></p>
     </form>
   `;
@@ -76,7 +76,7 @@ export function renderAuth(container) {
         localStorage.setItem("refreshToken", data.refreshToken);
         location.hash = "/";
       } catch (err) {
-        alert("Ошибка входа: " + err.message);
+        alert("Login error: " + err.message);
       }
     };
   }
@@ -93,14 +93,14 @@ export function renderAuth(container) {
         const res = await apiPost("/api/Auth/check-email", email);
         if (res.registered) {
           status.style.color = "red";
-          status.textContent = "Этот email уже зарегистрирован. Попробуйте войти.";
+          status.textContent = "This email is already registered. Try logging in.";
         } else {
           status.style.color = "#0f0";
-          status.textContent = "Email свободен ✅";
+          status.textContent = "Email is available ✅";
         }
       } catch {
         status.style.color = "orange";
-        status.textContent = "Не удалось проверить email.";
+        status.textContent = "Failed to check email.";
       }
     });
 
@@ -112,10 +112,10 @@ export function renderAuth(container) {
         const password = document.getElementById("signupPassword").value.trim();
         const res = await apiPost("/api/Auth/signup", { email, username, password });
         status.style.color = "#0f0";
-        status.textContent = res.message || "Письмо с подтверждением отправлено.";
+        status.textContent = res.message || "Confirmation email sent.";
       } catch (err) {
         status.style.color = "red";
-        status.textContent = "Ошибка: " + err.message;
+        status.textContent = "Error: " + err.message;
       }
     };
   }
@@ -129,10 +129,10 @@ export function renderAuth(container) {
         const password = document.getElementById("forgotPassword").value.trim();
         const res = await apiPost("/api/Auth/forgot-password", { email, password });
         status.style.color = "#0f0";
-        status.textContent = res.message || "Письмо для сброса отправлено.";
+        status.textContent = res.message || "Password reset email sent.";
       } catch (err) {
         status.style.color = "red";
-        status.textContent = "Ошибка: " + err.message;
+        status.textContent = "Error: " + err.message;
       }
     };
   }
